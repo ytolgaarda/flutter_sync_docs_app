@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/auth/auth_provider.dart';
+import '../../../../providers/auth/auth_provider.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -18,8 +18,6 @@ class _SignupViewState extends State<SignupView> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign Up'),
@@ -53,28 +51,30 @@ class _SignupViewState extends State<SignupView> {
             ),
             const SizedBox(height: 32),
 
-            // Signup Button
             ElevatedButton(
               onPressed: () async {
                 if (_passwordController.text !=
                     _confirmPasswordController.text) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Passwords do not match')),
+                    const SnackBar(content: Text('Şifreler eşleşmiyor')),
                   );
                   return;
                 }
+                final authProvider =
+                    Provider.of<AuthProvider>(context, listen: false);
                 try {
-                  await authProvider.signup(
-                    _emailController.text,
-                    _passwordController.text,
-                  );
+                  await authProvider.signup(_emailController.text,
+                      _passwordController.text, 'tolga arda');
+
+                  if (authProvider.user != null) {
+                    // ignore: use_build_context_synchronously
+                    if (mounted) Navigator.pop(context);
+                  }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Signup Failed: $e')),
-                  );
+                  authProvider.errorMessage = e.toString();
                 }
               },
-              child: const Text('Sign Up'),
+              child: const Text('Kaydol'), // Türkçe mesaj
             ),
           ],
         ),
