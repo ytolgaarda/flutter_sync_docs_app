@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sync_doc/providers/auth/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sync_doc/providers/auth/providers.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authController = ref.watch(authControllerProvider.notifier);
     return Scaffold(
       appBar: AppBar(title: const Text('Sync Docs')),
       body: SingleChildScrollView(
@@ -15,12 +16,9 @@ class HomeView extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  final a = Provider.of<AuthProvider>(context, listen: false);
-                  a.logout();
+                  authController.logout();
                 },
-                child: const Text(
-                  'Çıkış',
-                ),
+                child: const Text('Çıkış'),
               ),
             ],
           ),

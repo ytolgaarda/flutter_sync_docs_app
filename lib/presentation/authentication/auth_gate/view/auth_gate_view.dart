@@ -1,4 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sync_doc/presentation/authentication/login/view/login_view.dart';
+import 'package:sync_doc/presentation/home/view/home_view.dart';
+import 'package:sync_doc/providers/auth/auth_state_provider.dart';
+
+class AuthGateView extends ConsumerWidget {
+  const AuthGateView({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    return Scaffold(
+      body: authState.when(
+        data: (authState) {
+          if (authState?.session != null) {
+            return const HomeView();
+          } else {
+            return const LoginView();
+          }
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(child: Text('Hata: $error')),
+      ),
+    );
+  }
+}
+
+
+/* import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sync_doc/presentation/authentication/login/view/login_view.dart';
 import 'package:sync_doc/presentation/home/view/home_view.dart';
@@ -13,8 +42,6 @@ class AuthGateView extends StatefulWidget {
 }
 
 class _AuthGateViewState extends State<AuthGateView> {
-  // _hasShownError değişkenini kaldırıyoruz. Artık ihtiyacımız yok.
-  // Hata mesajını AuthProvider'da tutuyoruz ve oradan kontrol ediyoruz.
 
   @override
   Widget build(BuildContext context) {
@@ -46,3 +73,4 @@ class _AuthGateViewState extends State<AuthGateView> {
     );
   }
 }
+ */

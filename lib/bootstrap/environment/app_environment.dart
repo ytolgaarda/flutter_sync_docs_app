@@ -13,8 +13,6 @@ class AppEnvironment {
     switch (envType) {
       case EnvType.development:
         _configuration = DevelopmentEnv();
-      default:
-        throw UnsupportedError('Unsupported environment: $envType');
     }
   }
 
