@@ -1,16 +1,16 @@
-# sync_doc
+# Sync Doc - Flutter First Offline Docs App
+Flutter, Supabase, PowerSync ve Riverpod kullanarak geliştirilen bir çevrimdışı (offline) doküman düzenleme uygulamasıdır. Bu proje, kullanıcıların belgeleri çevrimdışı olarak oluşturup düzenlemelerine olanak tanırken, internet bağlantısı sağlandığında tüm veriler Supabase ile senkronize edilir. Proje, verimli bir belge yönetim sistemi geliştirmeyi hedefler.
 
-A new Flutter project.
+## Özellikler
 
-## Getting Started
+Çevrimdışı Destek: Kullanıcılar, internet bağlantısı olmadan belgelerini oluşturabilir ve düzenleyebilirler. Bağlantı sağlandığında, değişiklikler Supabase ile senkronize edilir.
+Supabase Entegrasyonu: Supabase kullanılarak kullanıcı doğrulama, veri depolama ve senkronizasyon işlemleri gerçekleştirilir.
+PowerSync: Çevrimdışı verilerin çevrimiçi veritabanına senkronize edilmesi için PowerSync kullanılır. Bu sayede internet bağlantısı sağlandığında veriler kaybolmaz.
+Riverpod ile Durum Yönetimi: Uygulama, Riverpod ile durum yönetimi gerçekleştirir. Kullanıcı doğrulama durumu, belge verileri ve çevrimdışı senkronizasyon gibi durumlar yönetilir.
 
-This project is a starting point for a Flutter application.
+## Teknolojiler
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flutter: Mobil uygulama geliştirme için Flutter kullanılmıştır.
+Supabase: Backend veritabanı ve kullanıcı yönetimi için Supabase kullanılmıştır.
+PowerSync: Çevrimdışı veri senkronizasyonu için PowerSync kullanılmıştır.
+Riverpod: Durum yönetimi için Riverpod kullanılmıştır.
