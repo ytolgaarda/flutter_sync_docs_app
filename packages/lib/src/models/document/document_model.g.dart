@@ -11,7 +11,8 @@ DocumentModel _$DocumentModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       content: json['content'] as String,
-      updateAt: DateTime.parse(json['updateAt'] as String),
+      update_at: DateTime.parse(json['update_at'] as String),
+      created_by: json['created_by'] as String,
     );
 
 Map<String, dynamic> _$DocumentModelToJson(DocumentModel instance) =>
@@ -19,5 +20,6 @@ Map<String, dynamic> _$DocumentModelToJson(DocumentModel instance) =>
       'id': instance.id,
       'title': instance.title,
       'content': instance.content,
-      'updateAt': instance.updateAt.toIso8601String(),
+      'update_at': instance.update_at.toIso8601String(),
+      'created_by': instance.created_by,
     };

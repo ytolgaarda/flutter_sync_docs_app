@@ -1,14 +1,14 @@
 import 'package:powersync/powersync.dart';
 
-const notesTable = 'notes';
+const documentsTable = 'documents';
 
-Schema schema = Schema(([
-  const Table(notesTable, [
-    Column.text('id'), // UUID olarak kullanılabilir
-    Column.text('content'), // Not içeriği
-    Column.integer('created_at'), // Unix timestamp formatında zaman
-    Column.integer('last_updated_at'), // Son güncellenme zamanı
+Schema schema = Schema([
+  const Table(documentsTable, [
+    Column.text('title'),
+    Column.text('content'),
+    Column.text('update_at'),
+    Column.text('created_by'),
   ], indexes: [
-    Index('created_index', [IndexedColumn('created_at')])
-  ]),
-]));
+    Index('created_by_idx', [IndexedColumn('created_by')])
+  ])
+]);
