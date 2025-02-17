@@ -8,6 +8,7 @@ Schema schema = Schema([
     Column.text('content'),
     Column.text('update_at'),
     Column.text('created_by'),
+    Column.integer('synced'),
   ], indexes: [
     Index('created_by_idx', [IndexedColumn('created_by')])
   ])

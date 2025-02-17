@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:packages/packages.dart';
+
 import '../models/document/schema.dart';
 import 'package:powersync/powersync.dart';
 
@@ -11,8 +14,12 @@ class PowerSyncService {
   }
 
   late final PowerSyncDatabase powerSyncDatabase;
+  late final DocumentService _documentService;
 
-  Future<void> initialize() async {
+  PowerSyncDatabase get db => powerSyncDatabase;
+
+  Future<void> initialize(DocumentService documentService) async {
+    _documentService = documentService;
     final dbPath = '${Directory.systemTemp.path}/powersync.db';
 
     powerSyncDatabase = PowerSyncDatabase(
@@ -21,7 +28,33 @@ class PowerSyncService {
     );
 
     await powerSyncDatabase.initialize();
+
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> res) {
+      if (res.isNotEmpty) {
+        for (var connectivity in res) {
+          if (connectivity != ConnectivityResult.none) {
+            uploadPendingDocumentsToSupabase();
+            break;
+          }
+        }
+      }
+    });
   }
 
-  PowerSyncDatabase get db => powerSyncDatabase;
+  Future<void> uploadPendingDocumentsToSupabase() async {
+    try {
+      final pendingDocuments = await powerSyncDatabase
+          .getAll('SELECT * FROM documents WHERE synced = 0');
+
+      for (var doc in pendingDocuments) {
+        final DocumentModel document = DocumentModel.fromJson(doc);
+        await _documentService.saveDocumentToSupabase(document);
+
+        await powerSyncDatabase.execute(
+            'UPDATE documents SET synced = 1 WHERE id = ?', [doc['id']]);
+      }
+    } catch (e) {
+      print('Hata: $e');
+    }
+  }
 }

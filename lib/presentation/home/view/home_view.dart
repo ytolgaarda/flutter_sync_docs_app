@@ -12,11 +12,12 @@ class HomeView extends ConsumerWidget {
     String userId = 'ff7b7056-1edd-417b-9793-77158b925dd4';
 
     DocumentModel document = DocumentModel(
-      id: '1',
+      id: 'a',
       title: 'Sample Document',
-      content: 'AAAAAThis is the content of the document.',
+      content: 'yeni document!! is the content of the document.',
       update_at: DateTime.now(),
       created_by: userId,
+      synced: 0,
     );
 
     return Scaffold(
@@ -39,7 +40,7 @@ class HomeView extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  DocumentService().saveDocumentToSupabase(document);
+                  //   DocumentService.instance.saveDocumentToSupabase(document);
                 },
                 child: const Text('yaz '),
               ),
@@ -48,6 +49,12 @@ class HomeView extends ConsumerWidget {
                   DocumentService().getAllDocumentsFromLocalDb();
                 },
                 child: const Text('get '),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  DocumentService().clearLocalDb();
+                },
+                child: const Text('tüm dbyi sil'),
               ),
             ],
           ),

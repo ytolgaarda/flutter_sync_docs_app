@@ -22,6 +22,6 @@ class AppInitialize {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
     // Powersync initialization
-    await PowerSyncService.instance.initialize();
+    await PowerSyncService.instance.initialize(DocumentService());
   }
 }
