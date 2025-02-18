@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:packages/packages.dart';
@@ -30,11 +31,12 @@ class PowerSyncService {
     await powerSyncDatabase.initialize();
 
     Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> res) {
+      log('Connection Changed: $res');
       if (res.isNotEmpty) {
         for (var connectivity in res) {
           if (connectivity != ConnectivityResult.none) {
+            log('int geldi');
             uploadPendingDocumentsToSupabase();
-            break;
           }
         }
       }
@@ -48,13 +50,18 @@ class PowerSyncService {
 
       for (var doc in pendingDocuments) {
         final DocumentModel document = DocumentModel.fromJson(doc);
-        await _documentService.saveDocumentToSupabase(document);
 
-        await powerSyncDatabase.execute(
-            'UPDATE documents SET synced = 1 WHERE id = ?', [doc['id']]);
+        final String? uploadedId =
+            await _documentService.saveDocumentToSupabase(document);
+
+        if (uploadedId != null) {
+          await powerSyncDatabase.execute(
+              'UPDATE documents SET synced = 1 WHERE id = ?', [uploadedId]);
+          log('Local database updated for document ID: $uploadedId');
+        }
       }
     } catch (e) {
-      print('Hata: $e');
+      log('Hata: $e');
     }
   }
 }

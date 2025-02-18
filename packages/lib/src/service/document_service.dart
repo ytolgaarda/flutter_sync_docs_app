@@ -12,7 +12,9 @@ class DocumentService {
     try {
       var connectivityResult = await Connectivity().checkConnectivity();
 
+      print(connectivityResult);
       if (connectivityResult.contains(ConnectivityResult.none)) {
+        print("asdasd");
         await _syncService.db.execute(
           'INSERT INTO documents (id, title, content, update_at, created_by, synced) VALUES (uuid(),?, ?, ?, ?, ?)',
           [
@@ -26,27 +28,38 @@ class DocumentService {
         log("Doküman başarıyla yerel veritabanına kaydedildi: $document");
       } else {
         await saveDocumentToSupabase(document);
-        await _syncService.db.execute(
-            'UPDATE documents SET synced = 1 WHERE id = ?', [document.id]);
       }
     } catch (e, stackTrace) {
       log("Hata oluştu: $e", name: "addNote", stackTrace: stackTrace);
     }
   }
 
-  Future<void> saveDocumentToSupabase(DocumentModel document) async {
+  Future<String?> saveDocumentToSupabase(DocumentModel document) async {
     try {
-      await _supabaseClient.from('documents').upsert({
+      final response = await _supabaseClient.from('documents').upsert({
         'title': document.title,
         'content': document.content,
         'update_at': document.update_at.toIso8601String(),
         'created_by': document.created_by,
-        'synced': document.synced,
-      });
+        'synced': 1,
+      }).select();
 
-      print('Document saved successfully!');
+      if (response.isNotEmpty) {
+        final supabaseId = response.first['id'];
+        log('Document saved to Supabase with ID: $supabaseId');
+
+        // **Yerel veritabanındaki synced durumunu güncelle**
+        await _syncService.db.execute(
+            'UPDATE documents SET synced = 1 WHERE id = ?', [supabaseId]);
+
+        return supabaseId;
+      } else {
+        log("Supabase'e doküman kaydedilemedi!");
+        return null;
+      }
     } catch (e) {
-      print('Error saving document: $e');
+      log('Error saving document to Supabase: $e');
+      return null;
     }
   }
 
@@ -62,10 +75,33 @@ class DocumentService {
       List<DocumentModel> documents = [];
       for (var row in result) {
         DocumentModel document = DocumentModel.fromJson(row);
-        print(document.synced);
+        log(document.getInfo() ?? '');
         documents.add(document);
       }
-      print("documents");
+
+      return documents;
+    } catch (e) {
+      print('Error retrieving documents: $e');
+      return [];
+    }
+  }
+
+  Future<List<DocumentModel>> getAllDocumentsFromRemoteDatabase() async {
+    try {
+      final response = await _supabaseClient
+          .from('documents')
+          .select()
+          .order('update_at', ascending: false);
+
+      if (response.isEmpty) {
+        log("documents empty in remote db");
+        return [];
+      }
+      List<DocumentModel> documents = [];
+      for (var row in response) {
+        documents.add(DocumentModel.fromJson(row));
+      }
+      log("Documents from Remote DB: $documents");
       return documents;
     } catch (e) {
       print('Error retrieving documents: $e');
@@ -77,15 +113,8 @@ class DocumentService {
     final db = _syncService.db;
 
     try {
-      final tables = await db
-          .getAll('SELECT name FROM sqlite_master WHERE type="documents"');
-
-      // Her tabloyu sil
-      for (var table in tables) {
-        final tableName = table['name'];
-        await db.execute('DROP TABLE IF EXISTS $tableName');
-        print('Table $tableName dropped');
-      }
+      await db.execute('DROP VIEW IF EXISTS documents');
+      print('Table "documents" dropped');
     } catch (e) {
       print('Veritabanı silme hatası: $e');
     }

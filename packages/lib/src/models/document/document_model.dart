@@ -26,4 +26,6 @@ class DocumentModel {
       _$DocumentModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$DocumentModelToJson(this);
+
+  String? getInfo() => '$id, $title $content, $created_by, $update_at, $synced';
 }
