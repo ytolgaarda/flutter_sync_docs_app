@@ -2,7 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:packages/packages.dart';
-import 'package:sync_doc/presentation/documents/view/documents_view.dart';
+import 'package:sync_doc/presentation/documents/list/view/documents_view.dart';
 import 'package:sync_doc/providers/auth/providers.dart';
 
 class HomeView extends ConsumerWidget {
