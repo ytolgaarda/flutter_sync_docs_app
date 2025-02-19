@@ -8,7 +8,10 @@ class DocumentListViewModel extends StateNotifier<DocumentState> {
   final DocumentService _documentService;
   final Connectivity _connectivity = Connectivity();
 
-  DocumentListViewModel(this._documentService) : super(DocumentState.initial());
+  DocumentListViewModel(this._documentService)
+      : super(DocumentState.initial()) {
+    fetchDocuments();
+  }
 
   Future<void> fetchDocuments() async {
     try {

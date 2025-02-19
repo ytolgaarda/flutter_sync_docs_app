@@ -14,7 +14,6 @@ class DocumentService {
 
       print(connectivityResult);
       if (connectivityResult.contains(ConnectivityResult.none)) {
-        print("asdasd");
         await _syncService.db.execute(
           'INSERT INTO documents (id, title, content, update_at, created_by, synced) VALUES (uuid(),?, ?, ?, ?, ?)',
           [
@@ -92,7 +91,6 @@ class DocumentService {
           .from('documents')
           .select()
           .order('update_at', ascending: false);
-
       if (response.isEmpty) {
         log("documents empty in remote db");
         return [];
