@@ -14,17 +14,6 @@ class HomeView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userFuture = ref.watch(userFutureProvider);
 
-    String userId = 'ff7b7056-1edd-417b-9793-77158b925dd4';
-
-    DocumentModel document5 = DocumentModel(
-      id: 'e',
-      title: 'Proje Sunumu',
-      content: 'Yeni başlatılacak proje için hazırlanan sunum dosyası.',
-      update_at: DateTime.now(),
-      created_by: userId,
-      synced: 1,
-    );
-
     return userFuture.when(
         data: (user) {
           if (user != null) {
