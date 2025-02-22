@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:packages/packages.dart';
 import 'package:sync_doc/presentation/documents/create_doc/view/create_note_view.dart';
 import 'package:sync_doc/presentation/documents/list/view/documents_view.dart';
 import 'package:sync_doc/providers/auth/user_provider.dart';

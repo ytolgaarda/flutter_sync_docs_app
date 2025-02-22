@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:packages/packages.dart';
+import 'package:sync_doc/presentation/documents/edit_doc/view/edit_doc_view.dart';
 import 'package:sync_doc/providers/services/service_providers.dart';
 
 class DocumentsListWidget extends ConsumerWidget {
@@ -43,6 +44,8 @@ class DocumentsListWidget extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final doc = documents[index];
                   return ListTile(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => EditDocumentView(document: doc))),
                     title: Text(doc.title),
                     subtitle: Text(doc.content),
                     trailing: doc.synced == 1

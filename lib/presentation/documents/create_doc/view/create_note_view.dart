@@ -12,26 +12,6 @@ class CreateNoteView extends ConsumerStatefulWidget {
 }
 
 class _CreateDocViewState extends ConsumerState<CreateNoteView> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController.addListener(() => _onTextChanged());
-    _contentController.addListener(() => _onTextChanged());
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
-
-    super.dispose();
-  }
-
-  void _onTextChanged() {}
-
   @override
   Widget build(BuildContext context) {
     final noteState = ref.watch(createNoteProvider(widget.userId));
